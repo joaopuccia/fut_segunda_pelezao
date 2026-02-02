@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %}Futebol de Segunda{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="{{ url_for('index') }}"><span class="logo">⚽</span> Fut de Segunda</a>
+      <nav class="nav-links">
+        <a class="link" href="{{ url_for('index') }}">Times</a>
+        <a class="link" href="{{ url_for('inscricao_get') }}">Inscrição</a>
+        <a class="link" href="{{ url_for('placar_publico') }}">Placar</a>
+        <a class="link" href="{{ url_for('estatisticas_geral') }}">Estatísticas</a>
+      </nav>
+      <span class="spacer"></span>
+      <a class="link" href="{{ url_for('admin_home', admin=request.args.get('admin','')) }}">Área do Admin</a>
+    </div>
+  </header>
+
+  <main class="container page">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="toast-stack">
+          {% for cat, msg in messages %}
+            <div class="toast toast-{{cat}}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>Feito com Flask + SQLite</span>
+      <span><a class="link" href="{{ url_for('estatisticas_geral') }}">Ranking histórico</a></span>
+    </div>
+  </footer>
+</body>
+</html>

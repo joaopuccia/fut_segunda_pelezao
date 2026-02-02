@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}{{ nome }} — {{ super() }}{% endblock %}
+{% block content %}
+  <section class="page-head"><div><h1 class="title">{{ nome }}</h1><p class="muted">Eventos históricos</p></div><div class="actions"><a class="btn btn-ghost" href="{{ url_for('estatisticas_geral') }}">Voltar</a></div></section>
+  <section class="card"><ul class="roster">
+    {% for g in eventos %}<li class="roster-item"><span class="name">{% if g.scorer_name and g.scorer_name|lower == nome|lower %}<b>Gol</b>{% else %}<b>Assistência</b>{% endif %} — Partida {{ g.match_id }} {% if g.minute is not none %} ({{ g.minute }}’){% endif %}</span></li>{% else %}<li class="roster-item muted">Sem registros para esse nome.</li>{% endfor %}
+  </ul></section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Admin — Check-in {{ super() }}{% endblock %}
+{% block content %}
+  <section class="page-head">
+    <div><h1 class="title">Check-in (ordem de chegada)</h1><p class="muted">{{ data.strftime('%d/%m/%Y') }}</p></div>
+    <div class="actions"><a class="btn btn-ghost" href="{{ url_for('admin_montagem', admin=request.args.get('admin','')) }}">Montagem</a></div>
+  </section>
+  <section class="card">
+    {% if not inscricoes %}<p class="muted">Nenhuma inscrição ainda.</p>{% else %}
+      <ul class="roster">
+        {% for s in inscricoes %}
+          <li class="roster-item">
+            {% if s.arrival_order %}<span class="pos-badge" style="background:#2ecc7133;color:#2ecc71;">#{{ s.arrival_order }}</span>{% else %}<span class="pos-badge" style="background:#ffd16633;color:#ffd166;">•</span>{% endif %}
+            <b style="min-width:60px">{{ s.posicao }}</b>
+            <span class="name" style="flex:1">{{ s.jogador.nome }}</span>
+            {% if not s.arrival_order %}
+              <form method="post" action="{{ url_for('admin_arrive', inscricao_id=s.id, admin=request.args.get('admin','')) }}"><button class="btn btn-primary" type="submit">Chegou</button></form>
+            {% else %}
+              <span class="muted">{{ s.arrived_at.strftime('%H:%M') if s.arrived_at else '—' }}</span>
+              <form method="post" action="{{ url_for('admin_arrive_undo', inscricao_id=s.id, admin=request.args.get('admin','')) }}"><button class="btn btn-ghost" type="submit">Desfazer</button></form>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>{% endif %}
+  </section>
+{% endblock %}

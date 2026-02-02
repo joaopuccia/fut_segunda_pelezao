@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Inscrição — {{ super() }}{% endblock %}
+{% block content %}
+  <section class="page-head">
+    <div>
+      <h1 class="title">Confirmar presença</h1>
+      <p class="muted">Partida: {{ data.strftime('%d/%m/%Y') }}</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-ghost" href="{{ url_for('index') }}">Voltar</a>
+    </div>
+  </section>
+
+  <section class="card form-card">
+    <form method="post" class="form">
+      {{ form.hidden_tag() }}
+      <div class="form-row">
+        {{ form.nome.label(class_="label") }}
+        {{ form.nome(class_="input", placeholder="Seu nome completo") }}
+        {% for e in form.nome.errors %}<div class="err">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="double">
+        <div class="form-row">
+          {{ form.posicao.label(class_="label") }}
+          {{ form.posicao(class_="select") }}
+          {% for e in form.posicao.errors %}<div class="err">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="form-row">
+          {{ form.posicao_secundaria.label(class_="label") }}
+          {{ form.posicao_secundaria(class_="select") }}
+        </div>
+      </div>
+      <div class="actions">
+        {{ form.submit(class_="btn btn-primary") }}
+        <a class="btn btn-ghost" href="{{ url_for('index') }}">Cancelar</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}

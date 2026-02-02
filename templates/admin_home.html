@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Admin — {{ super() }}{% endblock %}
+{% block content %}
+  <section class="page-head">
+    <div>
+      <h1 class="title">Administração</h1>
+      <p class="muted">{{ data.strftime('%d/%m/%Y') }} — Status: {{ status }}</p>
+    </div>
+  </section>
+  <div class="grid">
+    <a class="card" href="{{ url_for('admin_checkin', admin=request.args.get('admin','')) }}">
+      <h3>Check-in (ordem de chegada)</h3><p class="muted">Marcar chegadas e prioridade.</p></a>
+    <a class="card" href="{{ url_for('admin_montagem', admin=request.args.get('admin','')) }}">
+      <h3>Montagem de equipes</h3><p class="muted">Pré-visualizar e travar times.</p></a>
+    <a class="card" href="{{ url_for('admin_placar', admin=request.args.get('admin','')) }}">
+      <h3>Placar</h3><p class="muted">Registrar gols e assistências.</p></a>
+  </div>
+{% endblock %}

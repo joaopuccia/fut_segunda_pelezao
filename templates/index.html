@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Times — {{ super() }}{% endblock %}
+{% block content %}
+  <section class="page-head">
+    <div>
+      <h1 class="title">Próxima segunda</h1>
+      <p class="muted">{{ data.strftime('%d/%m/%Y') }}</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-ghost" href="{{ url_for('inscricao_get') }}">Inscrição</a>
+      <a class="btn btn-ghost" href="{{ url_for('placar_publico') }}">Placar</a>
+    </div>
+  </section>
+
+  {% if ranking and locked %}
+    <section class="card" style="margin-bottom:16px">
+      <h3>Ranking (partida atual)</h3>
+      <div class="grid">
+        <div class="card">
+          <h4>Artilharia</h4>
+          <ol>
+            {% for nome, qt in ranking.scorers %}
+              <li><b>{{ nome }}</b> — {{ qt }}</li>
+            {% endfor %}
+            {% if not ranking.scorers %}<li class="muted">Sem gols</li>{% endif %}
+          </ol>
+        </div>
+        <div class="card">
+          <h4>Assistências</h4>
+          <ol>
+            {% for nome, qt in ranking.assists %}
+              <li><b>{{ nome }}</b> — {{ qt }}</li>
+            {% endfor %}
+            {% if not ranking.assists %}<li class="muted">Sem assistências</li>{% endif %}
+          </ol>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if not times or times|length == 0 %}
+    <div class="empty"><p>Nenhuma inscrição ainda.</p></div>
+  {% endif %}
+
+  <div class="grid">
+    {% for t in times %}
+      <section class="card team-card">
+        <div class="team-head">
+          <div class="team-badge">T{{ loop.index }}</div>
+          <h2>{{ t.nome }}</h2>
+        </div>
+        <ul class="roster">
+          {% for j in t.jogadores %}
+            <li class="roster-item">
+              <span class="pos-badge pos-{{ j.pos }}">{{ j.pos }}</span>
+              <span class="name">{{ j.nome }}</span>
+            </li>
+          {% endfor %}
+          {% if t.jogadores|length == 0 %}
+            <li class="roster-item muted">Sem jogadores ainda</li>
+          {% endif %}
+        </ul>
+      </section>
+    {% endfor %}
+  </div>
+
+  {% if espera and espera|length > 0 %}
+    <section class="card waitlist">
+      <h3>Lista de espera</h3>
+      <ul class="roster">
+        {% for e in espera %}
+          <li class="roster-item">
+            <span class="pos-badge pos-{{ e.pos }}">{{ e.pos }}</span>
+            <span class="name">{{ e.nome }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Admin — Placar {{ super() }}{% endblock %}
+{% block content %}
+  <section class="page-head">
+    <div><h1 class="title">Placar e eventos</h1><p class="muted">{{ data.strftime('%d/%m/%Y') }}</p></div>
+    <div class="actions"><a class="btn btn-ghost" href="{{ url_for('index') }}">Público</a></div>
+  </section>
+  <section class="card"><h3>Elencos</h3><div class="grid">
+    {% for bucket in times_roster %}<div class="card"><h4>{{ bucket.team.name }}</h4><ul class="roster">{% for j in bucket.jogadores %}<li class="roster-item"><b>{{ j.pos }}</b> — {{ j.nome }}</li>{% endfor %}</ul></div>{% endfor %}
+  </div></section>
+  <section class="card" style="margin-top:16px"><h3>Registrar gol</h3>
+    <form method="post" action="{{ url_for('admin_placar_gol', admin=request.args.get('admin','')) }}">
+      <div class="double"><div><label class="label">Time</label><select class="select" name="team_id" required>{% for bucket in times_roster %}<option value="{{ bucket.team.id }}">{{ bucket.team.name }}</option>{% endfor %}</select></div>
+      <div><label class="label">Minuto (opcional)</label><input class="input" type="number" name="minute" min="0" max="120" /></div></div>
+      <div class="double"><div><label class="label">Marcador</label><select class="select" name="scorer_player_id" required>{% for bucket in times_roster %}<optgroup label="{{ bucket.team.name }}">{% for j in bucket.jogadores %}<option value="{{ j.id }}">{{ j.nome }} ({{ j.pos }})</option>{% endfor %}</optgroup>{% endfor %}</select></div>
+      <div><label class="label">Assistente (opcional)</label><select class="select" name="assist_player_id"><option value="">—</option>{% for bucket in times_roster %}<optgroup label="{{ bucket.team.name }}">{% for j in bucket.jogadores %}<option value="{{ j.id }}">{{ j.nome }} ({{ j.pos }})</option>{% endfor %}</optgroup>{% endfor %}</select></div></div>
+      <div class="actions"><button class="btn btn-primary" type="submit">Adicionar gol</button></div>
+    </form>
+  </section>
+  <section class="card" style="margin-top:16px"><h3>Eventos registrados</h3><ul class="roster">
+    {% for g in eventos %}<li class="roster-item"><span class="name"><b>{{ g.scorer_name }}</b> (gol){% if g.assist_name %}, assistência: {{ g.assist_name }}{% endif %}{% if g.minute is not none %} — {{ g.minute }}’{% endif %}</span><form method="post" action="{{ url_for('admin_placar_del', goal_id=g.id, admin=request.args.get('admin','')) }}"><button class="btn btn-ghost" type="submit">Excluir</button></form></li>{% else %}<li class="roster-item muted">Nenhum evento ainda.</li>{% endfor %}
+  </ul></section>
+{% endblock %}
